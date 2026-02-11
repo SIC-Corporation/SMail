@@ -1,7 +1,132 @@
-<footer class="mt-auto p-10 bg-slate-950 text-center border-t border-slate-800">
-    <div class="text-cyan-400 font-bold text-xl mb-2">SMail <span class="text-slate-500 text-sm">by SIC Corp</span></div>
-    <p class="text-slate-500 mb-4">Secure. Minimal. Authentic.</p>
-    <a href="mailto:smail.sic@zohomail.com" class="bg-slate-800 border border-slate-700 px-4 py-2 rounded-full hover:border-cyan-400 transition">
-        Contact: smail.sic@zohomail.com
-    </a>
-</footer>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIC Corp | SMail Gateway</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+        body { font-family: 'Fira Code', monospace; scroll-behavior: smooth; }
+        .glow:hover { box-shadow: 0 0 20px rgba(34, 211, 238, 0.3); }
+        .terminal-scroll::-webkit-scrollbar { width: 4px; }
+        .terminal-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col">
+
+    <nav class="p-6 border-b border-slate-800 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-tighter text-cyan-400">
+                SIC<span class="text-white">.CORP</span>
+            </div>
+            <div class="text-xs font-mono text-slate-500 hidden sm:block">
+                STATUS: <span class="text-emerald-500 animate-pulse">ENCRYPTED_ONLINE</span>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-20 pb-10 px-6 text-center">
+        <h1 class="text-5xl md:text-6xl font-black mb-4 tracking-tight">
+            SMail <span class="text-cyan-500">Center</span>
+        </h1>
+        <p class="text-slate-500 max-w-xl mx-auto mb-8">
+            The private communication layer for Roy's SIC Corp. No NexaFlow tracking. No noise. Just data.
+        </p>
+    </header>
+
+    <main class="flex-grow px-6 pb-20">
+        <div class="max-w-xl mx-auto">
+            
+            <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+                
+                <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                    <span class="h-2 w-2 bg-cyan-500 rounded-full"></span>
+                    Identity Verification
+                </h2>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-slate-500 mb-2 block">Request Internal Alias</label>
+                        <div class="flex">
+                            <input type="text" id="requestedName" placeholder="e.g. bob" 
+                                   class="w-full bg-slate-950 border border-slate-800 p-4 rounded-l-xl focus:outline-none focus:border-cyan-500 transition font-mono">
+                            <span class="bg-slate-800 p-4 rounded-r-xl text-cyan-500 border border-l-0 border-slate-800 font-bold flex items-center">
+                                .smail
+                            </span>
+                        </div>
+                    </div>
+
+                    <button onclick="evaluateUser()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-slate-900 font-black py-4 rounded-xl transition transform active:scale-95 shadow-lg uppercase tracking-tighter">
+                        Request Pulse Match
+                    </button>
+
+                    <div id="statusBox" class="mt-4 p-4 bg-black rounded-lg hidden border border-slate-800">
+                        <p id="bouncerMessage" class="text-xs font-mono"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                <h3 class="text-center text-[10px] uppercase tracking-[0.3em] text-slate-600 mb-6">Active Network Nodes</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-900/50 border border-slate-800 p-3 rounded-lg flex items-center gap-3">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                        <span class="text-sm font-mono text-slate-400">roy.smail</span>
+                    </div>
+                    <div class="bg-slate-900/50 border border-slate-800 p-3 rounded-lg flex items-center gap-3">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                        <span class="text-sm font-mono text-slate-400">bob.smail</span>
+                    </div>
+                    <div class="bg-slate-900/50 border border-slate-800 p-3 rounded-lg flex items-center gap-3">
+                        <div class="w-2 h-2 bg-cyan-500/20 rounded-full"></div>
+                        <span class="text-sm font-mono text-slate-600">mobby.os</span>
+                    </div>
+                    <div class="bg-slate-900/50 border border-slate-800 p-3 rounded-lg flex items-center gap-3">
+                        <div class="w-2 h-2 bg-slate-700 rounded-full"></div>
+                        <span class="text-sm font-mono text-slate-700">awaiting_node...</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="p-8 border-t border-slate-900 text-center">
+        <div class="text-xs text-slate-600 font-mono">
+            SECURE_LINK: <a href="mailto:sicmailcenter1@gmail.com" class="text-slate-400 hover:text-cyan-400">sicmailcenter1@gmail.com</a>
+        </div>
+        <div class="mt-2 text-[10px] text-slate-800 uppercase">SIC Corp Intranet // 2026</div>
+    </footer>
+
+    <script>
+        function evaluateUser() {
+            const username = document.getElementById('requestedName').value.trim().toLowerCase();
+            const statusBox = document.getElementById('statusBox');
+            const bouncerMessage = document.getElementById('bouncerMessage');
+
+            if (!username) return;
+
+            statusBox.classList.remove('hidden');
+            bouncerMessage.innerText = "> Running SIC-Scan on '" + username + "'...";
+            bouncerMessage.className = "text-xs font-mono text-cyan-500";
+
+            setTimeout(() => {
+                const forbidden = ['admin', 'test', 'nexaflow', 'google', 'root'];
+                
+                if (username.length < 3) {
+                    bouncerMessage.innerText = "> REJECTED: Alias string insufficient length.";
+                    bouncerMessage.className = "text-xs font-mono text-red-500";
+                } else if (forbidden.includes(username)) {
+                    bouncerMessage.innerText = "> REJECTED: Security Risk. Alias restricted.";
+                    bouncerMessage.className = "text-xs font-mono text-red-500";
+                } else {
+                    bouncerMessage.innerText = "> SUCCESS: '" + username + ".smail' is available. Contact sicmailcenter1@gmail.com to claim.";
+                    bouncerMessage.className = "text-xs font-mono text-emerald-400";
+                }
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
