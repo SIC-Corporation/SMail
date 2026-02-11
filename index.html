@@ -3,130 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMail | Remastered by SIC Corp</title>
+    <title>SMail | Remastered</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Fira+Code:wght@400&display=swap');
+        :root { --bg: #0b0b0c; --card: #161617; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #fff; margin: 0; overflow: hidden; }
         
-        :root { --bg: #0b0b0c; --card: #161617; --accent: #4285f4; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #fff; overflow: hidden; }
-        
-        /* Smooth Transitions */
-        .page { transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); position: absolute; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .hidden-page { opacity: 0; transform: translateY(20px); pointer-events: none; }
-        
-        /* FPS Boost Logic */
-        .fps-boost-active { --bg: #000; }
-        .fps-boost-active * { border-radius: 4px !important; box-shadow: none !important; backdrop-filter: none !important; transition: none !important; }
-
         .gemini-glow { background: linear-gradient(135deg, #4285f4 0%, #9b72f3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
         
-        .loading-bar { width: 0%; height: 2px; background: linear-gradient(90deg, #4285f4, #9b72f3); transition: width 0.5s ease; }
+        /* Modal Transitions */
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; display: none; align-items: center; justify-content: center; backdrop-filter: blur(20px); }
+        .admin-vault { position: fixed; inset: 0; background: #000; z-index: 200; display: none; flex-direction: column; padding: 40px; }
+        
+        .fps-boost-active * { transition: none !important; backdrop-filter: none !important; border-radius: 0px !important; }
     </style>
 </head>
 <body>
 
-    <div class="fixed top-6 right-6 z-[100]">
-        <button onclick="toggleFPS()" id="fpsBtn" class="glass px-4 py-2 rounded-full text-[10px] font-black tracking-tighter hover:bg-white hover:text-black transition">
-            FPS BOOST: OFF
-        </button>
+    <div id="settingsOverlay" class="overlay">
+        <div class="max-w-md w-full glass p-8 rounded-[32px] relative">
+            <button onclick="toggleSettings()" class="absolute top-6 right-6 text-slate-500 hover:text-white">✕</button>
+            <h2 class="text-xl font-bold mb-6">System Settings</h2>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center p-4 bg-white/5 rounded-2xl">
+                    <span class="text-sm font-semibold text-slate-300">SI<span id="secretC" class="cursor-default">C</span>ryption Engine</span>
+                    <span class="text-[10px] text-emerald-500 font-bold">ACTIVE</span>
+                </div>
+                <div class="flex justify-between items-center p-4 bg-white/5 rounded-2xl">
+                    <span class="text-sm font-semibold text-slate-300">FPS Boost</span>
+                    <button onclick="toggleFPS()" id="fpsBtn" class="text-[10px] bg-white text-black px-3 py-1 rounded-full font-bold">OFF</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <section id="welcomeScreen" class="page">
-        <div class="text-center">
-            <h1 class="text-6xl font-extrabold tracking-tighter mb-4 opacity-0 transition-all duration-1000 translate-y-4" id="welcomeTitle">
-                SMail <span class="gemini-glow">Remastered</span>
-            </h1>
-            <p class="text-slate-500 font-light tracking-[0.3em] uppercase text-xs mb-8" id="welcomeSub">Architecture by SIC Corp</p>
-            <button onclick="startSetup()" class="glass px-10 py-4 rounded-full font-bold hover:scale-105 transition active:scale-95">
-                Initialize System
-            </button>
+    <div id="adminVault" class="admin-vault">
+        <div class="flex justify-between items-center mb-10">
+            <h1 class="text-2xl font-black italic gemini-glow tracking-tighter">SIC_MASTER_COMMAND</h1>
+            <button onclick="location.reload()" class="text-[10px] text-slate-500 hover:text-white border border-slate-800 px-4 py-2 rounded-full">LOCK TERMINAL</button>
         </div>
-    </section>
-
-    <section id="setupScreen" class="page hidden-page">
-        <div class="max-w-md w-full glass p-10 rounded-[40px] shadow-2xl">
-            <div class="mb-10">
-                <h2 class="text-2xl font-bold mb-2">Welcome, Founder.</h2>
-                <p class="text-slate-400 text-sm">Let's set up your business identity.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Total Provisions</p>
+                <p class="text-4xl font-mono mt-2" id="relayStats">0</p>
             </div>
-
-            <div class="space-y-6">
-                <div>
-                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 block">Choose your business handle</label>
-                    <div class="relative">
-                        <input type="text" id="aliasInput" placeholder="company_name" 
-                               class="w-full bg-black/40 border border-white/10 p-5 rounded-2xl focus:outline-none focus:border-blue-500 transition-all text-white">
-                        <span class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 text-xs">@duck.com</span>
-                    </div>
-                </div>
-
-                <button onclick="runSecurityStack()" class="w-full bg-white text-black font-extrabold py-5 rounded-2xl hover:bg-slate-200 transition">
-                    Finalize Identity
-                </button>
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Security Layer</p>
+                <p class="text-4xl font-mono mt-2 text-blue-500">WatcherDog</p>
             </div>
-
-            <div id="auditBox" class="mt-8 pt-8 border-t border-white/5 hidden">
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center text-[10px]">
-                        <span class="text-slate-500 uppercase font-bold">WatcherDog Privacy Scan</span>
-                        <span id="status1" class="text-blue-500 italic font-mono">WAITING...</span>
-                    </div>
-                    <div class="flex justify-between items-center text-[10px]">
-                        <span class="text-slate-500 uppercase font-bold">SICryption Hash Link</span>
-                        <span id="status2" class="text-blue-500 italic font-mono">WAITING...</span>
-                    </div>
-                </div>
-                <div class="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl hidden" id="finalResult">
-                    <p class="text-emerald-400 text-xs font-bold mb-2 uppercase tracking-tighter italic">Identity Provisioned</p>
-                    <a id="claimLink" href="#" class="text-white underline text-[10px] font-mono">CLICK TO CLAIM UPLINK</a>
-                </div>
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Network Speed</p>
+                <p class="text-4xl font-mono mt-2 text-purple-500">∞ gbps</p>
             </div>
+        </div>
+    </div>
+
+    <nav class="fixed top-0 w-full p-8 flex justify-between items-center z-50">
+        <div class="font-black text-xl tracking-tighter">SMail</div>
+        <button onclick="toggleSettings()" class="glass p-3 rounded-full hover:bg-white/10 transition">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+    </nav>
+
+    <main class="flex flex-col items-center justify-center min-h-screen p-6 text-center">
+        <h1 class="text-6xl font-extrabold tracking-tighter mb-4">SMail <span class="gemini-glow italic">Remastered</span></h1>
+        <p class="text-slate-400 max-w-sm mb-12">Elite emailing for businesses that want to start strong. Powered by SICryption.</p>
+        
+        <div class="max-w-md w-full glass p-8 rounded-[40px] shadow-2xl">
+            <input type="text" id="userInput" placeholder="Choose your handle..." class="w-full bg-black/40 border border-white/10 p-5 rounded-2xl mb-4 focus:outline-none focus:border-purple-500">
+            <button onclick="requestRelay()" class="w-full bg-white text-black font-black py-4 rounded-2xl transition hover:bg-slate-200 active:scale-95">Initialize Uplink</button>
+            <div id="result" class="mt-6 hidden animate-pulse font-mono text-xs text-blue-400">Connecting to SIC Stack...</div>
         </div>
     </main>
 
     <script>
-        // Animate Welcome Screen on Load
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('welcomeTitle').style.opacity = '1';
-                document.getElementById('welcomeTitle').style.transform = 'translateY(0)';
-            }, 300);
+        let secretClicks = 0;
+        let totalProvisions = 0;
+
+        function toggleSettings() {
+            const s = document.getElementById('settingsOverlay');
+            s.style.display = (s.style.display === 'flex') ? 'none' : 'flex';
         }
 
         function toggleFPS() {
             document.body.classList.toggle('fps-boost-active');
-            const btn = document.getElementById('fpsBtn');
-            btn.innerText = document.body.classList.contains('fps-boost-active') ? "FPS BOOST: ON" : "FPS BOOST: OFF";
+            document.getElementById('fpsBtn').innerText = document.body.classList.contains('fps-boost-active') ? "ON" : "OFF";
         }
 
-        function startSetup() {
-            document.getElementById('welcomeScreen').classList.add('hidden-page');
-            document.getElementById('setupScreen').classList.remove('hidden-page');
-        }
+        // THE SECRET LOGIC
+        document.getElementById('secretC').onclick = function() {
+            secretClicks++;
+            if (secretClicks === 5) {
+                secretClicks = 0;
+                let pass = prompt("Enter Neural Key:");
+                if (pass === "wheesh lahasa") {
+                    document.getElementById('adminVault').style.display = 'flex';
+                } else {
+                    alert("ACCESS DENIED BY WATCHERDOG.");
+                }
+            }
+        };
 
-        async function runSecurityStack() {
-            const name = document.getElementById('aliasInput').value.trim();
-            if(!name) return;
-
-            document.getElementById('auditBox').classList.remove('hidden');
-            
-            // WatcherDog Scan
-            document.getElementById('status1').innerText = "SCANNING...";
-            await new Promise(r => setTimeout(r, 1200));
-            document.getElementById('status1').innerText = "PROTECTED";
-            document.getElementById('status1').classList.replace('text-blue-500', 'text-emerald-500');
-
-            // SICryption Gen
-            document.getElementById('status2').innerText = "ENCRYPTING...";
-            await new Promise(r => setTimeout(r, 1200));
-            document.getElementById('status2').innerText = "SIC-VERIFIED";
-            document.getElementById('status2').classList.replace('text-blue-500', 'text-emerald-500');
-
-            // Final Result
-            document.getElementById('finalResult').classList.remove('hidden');
-            document.getElementById('claimLink').href = `mailto:cone-swarm-junior@duck.com?subject=SIC_REMASTERED_CLAIM: ${name}`;
+        function requestRelay() {
+            const user = document.getElementById('userInput').value;
+            if(!user) return;
+            const res = document.getElementById('result');
+            res.classList.remove('hidden');
+            setTimeout(() => {
+                totalProvisions++;
+                document.getElementById('relayStats').innerText = totalProvisions;
+                res.innerHTML = `DONE. <a href="mailto:cone-swarm-junior@duck.com?subject=SIC-CLAIM: ${user}" class="underline text-white">CLICK TO CLAIM ${user}@duck.com</a>`;
+                res.classList.remove('animate-pulse');
+            }, 2000);
         }
     </script>
 </body>
