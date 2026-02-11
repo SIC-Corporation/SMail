@@ -3,93 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMail | Personal & Business</title>
+    <title>SMail | Remastered by SIC Corp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Fira+Code:wght@400&display=swap');
-        :root { --bg: #0b0b0c; --card: #161617; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #fff; margin: 0; overflow-x: hidden; transition: background 0.5s ease; }
         
+        :root { --bg: #0b0b0c; --card: #161617; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #fff; margin: 0; overflow-x: hidden; transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Premium Glows */
         .gemini-glow { background: linear-gradient(135deg, #4285f4 0%, #9b72f3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .business-glow { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; }
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; display: none; align-items: center; justify-content: center; backdrop-filter: blur(20px); }
-        .admin-vault { position: fixed; inset: 0; background: #000; z-index: 200; display: none; flex-direction: column; padding: 40px; }
+        /* Glass UI */
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); transition: all 0.4s ease; }
         
-        /* Smooth Mode Switching */
+        /* FPS Boost Mode (Simplified Styles) */
+        .fps-boost-active { background: #000 !important; }
+        .fps-boost-active * { backdrop-filter: none !important; transition: none !important; box-shadow: none !important; border-radius: 4px !important; }
+
+        /* Hidden Overlays */
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; display: none; align-items: center; justify-content: center; backdrop-filter: blur(20px); }
+        .admin-vault { position: fixed; inset: 0; background: #000; z-index: 200; display: none; flex-direction: column; padding: 40px; }
+
+        /* Mode Switching */
         .mode-business { --bg: #050505; }
         .mode-business .glass { border-color: rgba(251, 191, 36, 0.2); }
+
+        .loading-bar { height: 2px; width: 0%; background: linear-gradient(90deg, #4285f4, #9b72f3); transition: width 1s ease; }
     </style>
 </head>
 <body class="mode-personal">
 
     <div id="settingsOverlay" class="overlay">
-        <div class="max-w-md w-full glass p-8 rounded-[32px] relative">
-            <button onclick="toggleSettings()" class="absolute top-6 right-6 text-slate-500 hover:text-white">✕</button>
-            <h2 class="text-xl font-bold mb-6">Internal Config</h2>
+        <div class="max-w-md w-full glass p-8 rounded-[32px] relative animate-in zoom-in duration-300">
+            <button onclick="toggleSettings()" class="absolute top-6 right-6 text-slate-500 hover:text-white transition">✕</button>
+            <h2 class="text-xl font-bold mb-6">SIC Master Config</h2>
             <div class="space-y-4">
-                <div class="flex justify-between items-center p-4 bg-white/5 rounded-2xl">
-                    <span class="text-sm font-semibold text-slate-300">SI<span id="secretC" class="cursor-default">C</span>ryption Tier</span>
-                    <span id="tierStatus" class="text-[10px] text-blue-500 font-bold uppercase">Personal</span>
+                <div class="flex justify-between items-center p-5 bg-white/5 rounded-2xl border border-white/5">
+                    <span class="text-sm font-semibold text-slate-300 tracking-tight">SI<span id="secretC" class="cursor-default">C</span>ryption Status</span>
+                    <span id="tierStatus" class="text-[10px] text-blue-500 font-black uppercase tracking-widest">PERSONAL</span>
+                </div>
+                <div class="flex justify-between items-center p-5 bg-white/5 rounded-2xl border border-white/5">
+                    <span class="text-sm font-semibold text-slate-300 tracking-tight">FPS Boost</span>
+                    <button onclick="toggleFPS()" id="fpsBtn" class="text-[10px] bg-white text-black px-4 py-1 rounded-full font-black uppercase tracking-tighter">OFF</button>
                 </div>
             </div>
+            <p class="text-[9px] text-slate-700 text-center mt-8 uppercase tracking-[0.4em]">Internal System v2.0</p>
         </div>
     </div>
 
-    <div id="adminVault" class="admin-vault">
+    <div id="adminVault" class="admin-vault animate-in fade-in duration-700">
         <div class="flex justify-between items-center mb-10">
-            <h1 class="text-2xl font-black italic gemini-glow tracking-tighter uppercase">SIC_MASTER_COMMAND</h1>
-            <button onclick="location.reload()" class="text-[10px] text-slate-500 border border-slate-800 px-4 py-2 rounded-full">RELOCK</button>
+            <div>
+                <h1 class="text-2xl font-black italic gemini-glow tracking-tighter uppercase">SIC_MASTER_COMMAND</h1>
+                <p class="text-[10px] text-slate-600 uppercase tracking-widest font-bold">Owner: Roy // SIC Corp</p>
+            </div>
+            <button onclick="location.reload()" class="text-[10px] text-slate-500 border border-slate-800 px-6 py-2 rounded-full hover:bg-white hover:text-black transition">LOCK TERMINAL</button>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="glass p-10 rounded-[40px]">
                 <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Total Handshakes</p>
-                <p class="text-6xl font-mono mt-4" id="relayStats">0</p>
+                <p class="text-6xl font-mono mt-4 text-white" id="relayStats">0</p>
             </div>
             <div class="glass p-10 rounded-[40px]">
-                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">WatcherDog Log</p>
-                <div class="mt-4 font-mono text-[10px] text-emerald-500/50">
-                    > NO_THREATS_DETECTED<br>> SIC_CORE_STABLE
-                </div>
+                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Security Layer</p>
+                <p class="text-4xl font-mono mt-4 text-blue-500">WatcherDog</p>
             </div>
+            <div class="glass p-10 rounded-[40px]">
+                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">AI Status</p>
+                <p class="text-4xl font-mono mt-4 text-purple-500">MobbyOS_Active</p>
+            </div>
+        </div>
+        <div class="mt-10 flex-grow glass rounded-[40px] p-8 overflow-hidden">
+             <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Live Packet Feed</h3>
+             <div id="adminLogs" class="font-mono text-[10px] text-emerald-500/60 space-y-2">
+                 <div>> SYSTEM_ROOT_AUTHENTICATED</div>
+             </div>
         </div>
     </div>
 
     <nav class="fixed top-0 w-full p-8 flex justify-between items-center z-50">
         <div class="font-black text-2xl tracking-tighter">S<span class="text-slate-500">M</span>ail</div>
         <div class="flex gap-4">
-            <div class="glass p-1 rounded-full flex gap-1">
-                <button onclick="setMode('personal')" id="btnPers" class="px-4 py-1.5 rounded-full text-[10px] font-bold transition bg-white text-black">PERSONAL</button>
-                <button onclick="setMode('business')" id="btnBiz" class="px-4 py-1.5 rounded-full text-[10px] font-bold transition text-slate-400">BUSINESS</button>
+            <div class="glass p-1.5 rounded-full flex gap-1">
+                <button onclick="setMode('personal')" id="btnPers" class="px-5 py-2 rounded-full text-[10px] font-black transition bg-white text-black">PERSONAL</button>
+                <button onclick="setMode('business')" id="btnBiz" class="px-5 py-2 rounded-full text-[10px] font-black transition text-slate-400">BUSINESS</button>
             </div>
-            <button onclick="toggleSettings()" class="glass p-2 rounded-full hover:bg-white/10 transition">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <button onclick="toggleSettings()" class="glass p-3 rounded-full hover:bg-white/10 transition active:scale-90">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             </button>
         </div>
     </nav>
 
     <main class="flex flex-col items-center justify-center min-h-screen p-6 text-center">
-        <div id="content-personal" class="animate-in fade-in duration-700">
-            <h1 class="text-7xl font-extrabold tracking-tighter mb-4">SMail <span class="gemini-glow italic">Personal</span></h1>
-            <p class="text-slate-400 max-w-sm mx-auto mb-10 text-sm font-light">The private, remastered emailing layer for individuals. Protected by WatcherDog.</p>
+        <div id="content-personal" class="transition-all duration-700 scale-100">
+            <h1 class="text-7xl md:text-8xl font-extrabold tracking-tighter mb-4">SMail <span class="gemini-glow italic">Personal</span></h1>
+            <p class="text-slate-500 max-w-sm mx-auto mb-10 text-sm font-light tracking-wide">Private, high-end messaging remastered for individuals. Optimized by WatcherDog.</p>
         </div>
         
-        <div id="content-business" class="hidden animate-in fade-in duration-700">
-            <h1 class="text-7xl font-extrabold tracking-tighter mb-4 italic">SMail <span class="business-glow">Business</span></h1>
-            <p class="text-slate-400 max-w-sm mx-auto mb-10 text-sm font-light uppercase tracking-widest">The high-performance stack for entrepreneurs. Powered by SICryption.</p>
+        <div id="content-business" class="hidden transition-all duration-700 scale-100">
+            <h1 class="text-7xl md:text-8xl font-extrabold tracking-tighter mb-4 italic">SMail <span class="business-glow">Business</span></h1>
+            <p class="text-slate-500 max-w-sm mx-auto mb-10 text-sm font-light uppercase tracking-[0.3em]">Corporate Infrastructure.<br>Secured by SICryption.</p>
         </div>
 
-        <div class="max-w-md w-full glass p-10 rounded-[48px] shadow-2xl">
-            <input type="text" id="userInput" placeholder="Register handle..." class="w-full bg-black/40 border border-white/10 p-5 rounded-2xl mb-4 focus:outline-none focus:border-blue-500 transition-all text-center font-bold">
-            <button onclick="requestRelay()" class="w-full bg-white text-black font-black py-5 rounded-2xl transition hover:bg-slate-200 active:scale-95 text-xs tracking-widest uppercase">Start Provisioning</button>
-            <div id="result" class="mt-8 hidden font-mono text-[10px] text-blue-400 uppercase tracking-widest">Initialising Handshake...</div>
+        <div class="max-w-md w-full glass p-10 rounded-[48px] shadow-2xl relative">
+            <input type="text" id="userInput" placeholder="Register Business Handle..." class="w-full bg-black/40 border border-white/10 p-5 rounded-2xl mb-4 focus:outline-none focus:border-blue-500 transition-all text-center font-bold text-white placeholder:text-slate-700 tracking-widest uppercase text-sm">
+            <button onclick="requestRelay()" class="w-full bg-white text-black font-black py-5 rounded-2xl transition hover:bg-slate-200 active:scale-95 text-[10px] tracking-[0.3em] uppercase shadow-lg">Initialize Transmission</button>
+            
+            <div id="result" class="mt-8 hidden space-y-4">
+                <div class="h-[2px] bg-white/5 rounded-full overflow-hidden">
+                    <div id="progressBar" class="loading-bar"></div>
+                </div>
+                <p id="statusText" class="font-mono text-[9px] text-blue-400 uppercase tracking-widest">Handshake Starting...</p>
+            </div>
         </div>
     </main>
 
+    <footer class="fixed bottom-8 w-full text-center">
+        <p class="text-[9px] text-slate-700 font-bold uppercase tracking-[0.5em]">SIC CORP &copy; 2026 // ROY MASTER NODE</p>
+    </footer>
+
     <script>
         let secretClicks = 0;
-        let counter = 0;
+        let provisionCount = 0;
 
         function setMode(mode) {
             const isBiz = mode === 'business';
@@ -97,10 +134,10 @@
             document.getElementById('content-personal').classList.toggle('hidden', isBiz);
             document.getElementById('content-business').classList.toggle('hidden', !isBiz);
             document.getElementById('tierStatus').innerText = mode.toUpperCase();
+            document.getElementById('userInput').placeholder = isBiz ? "ENTER COMPANY NAME..." : "ENTER PERSONAL HANDLE...";
             
-            // Toggle Button Styles
-            document.getElementById('btnBiz').className = isBiz ? "px-4 py-1.5 rounded-full text-[10px] font-bold transition bg-white text-black" : "px-4 py-1.5 rounded-full text-[10px] font-bold transition text-slate-400";
-            document.getElementById('btnPers').className = !isBiz ? "px-4 py-1.5 rounded-full text-[10px] font-bold transition bg-white text-black" : "px-4 py-1.5 rounded-full text-[10px] font-bold transition text-slate-400";
+            document.getElementById('btnBiz').className = isBiz ? "px-5 py-2 rounded-full text-[10px] font-black transition bg-white text-black" : "px-5 py-2 rounded-full text-[10px] font-black transition text-slate-400";
+            document.getElementById('btnPers').className = !isBiz ? "px-5 py-2 rounded-full text-[10px] font-black transition bg-white text-black" : "px-5 py-2 rounded-full text-[10px] font-black transition text-slate-400";
         }
 
         function toggleSettings() {
@@ -108,7 +145,12 @@
             s.style.display = (s.style.display === 'flex') ? 'none' : 'flex';
         }
 
-        // SECRET HANDSHAKE
+        function toggleFPS() {
+            document.body.classList.toggle('fps-boost-active');
+            document.getElementById('fpsBtn').innerText = document.body.classList.contains('fps-boost-active') ? "ON" : "OFF";
+        }
+
+        // SECRET HANDSHAKE LOGIC
         document.getElementById('secretC').onclick = function() {
             secretClicks++;
             if (secretClicks === 5) {
@@ -116,24 +158,56 @@
                 let pass = prompt("NEURAL KEY REQUIRED:");
                 if (pass === "wheesh lahasa") {
                     document.getElementById('adminVault').style.display = 'flex';
+                    addAdminLog("OWNER_ACCESS_GRANTED", "text-emerald-400");
                 }
             }
         };
 
-        function requestRelay() {
-            const user = document.getElementById('userInput').value;
+        function addAdminLog(msg, color = "text-emerald-500/60") {
+            const logs = document.getElementById('adminLogs');
+            logs.innerHTML = `<div class="${color}">> [${new Date().toLocaleTimeString()}] ${msg}</div>` + logs.innerHTML;
+        }
+
+        async function requestRelay() {
+            const user = document.getElementById('userInput').value.trim();
             if(!user) return;
+            
             const res = document.getElementById('result');
+            const bar = document.getElementById('progressBar');
+            const status = document.getElementById('statusText');
+            
             res.classList.remove('hidden');
-            res.innerHTML = "WATCHERDOG: SCANNING PRIVACY...";
+            
+            // Step 1
+            bar.style.width = "33%";
+            status.innerText = "WatcherDog: Verifying Privacy Layer...";
+            await new Promise(r => setTimeout(r, 1200));
+
+            // Step 2
+            bar.style.width = "66%";
+            status.innerText = "SICryption: Binding Neural Hash...";
+            await new Promise(r => setTimeout(r, 1200));
+
+            // Step 3
+            bar.style.width = "100%";
+            status.innerText = "AI: AUTO-TRANSMITTING TO SIC NODE...";
+            
+            provisionCount++;
+            document.getElementById('relayStats').innerText = provisionCount;
+            addAdminLog(`PROVISIONED: ${user.toUpperCase()}`);
+
             setTimeout(() => {
-                res.innerHTML = "SICRYPTION: ENCRYPTING NODE...";
-                setTimeout(() => {
-                    counter++;
-                    document.getElementById('relayStats').innerText = counter;
-                    res.innerHTML = `<a href="mailto:cone-swarm-junior@duck.com?subject=SIC-CLAIM: ${user}" class="text-white border-b border-white">CLAIM ${user.toUpperCase()}@DUCK.COM</a>`;
-                }, 1500);
-            }, 1500);
+                const sicKey = Math.random().toString(36).substring(2, 10).toUpperCase();
+                res.innerHTML = `
+                    <div class="animate-in fade-in zoom-in duration-700 bg-emerald-500/5 p-6 rounded-3xl border border-emerald-500/20">
+                        <p class="text-emerald-400 font-black text-xs italic tracking-tighter uppercase">Transmission Success</p>
+                        <p class="text-[9px] text-slate-500 mt-2 uppercase tracking-[0.2em] leading-relaxed">
+                            Identity <span class="text-white font-bold">${user}</span> registered.<br>
+                            SICryption Key: <span class="text-white font-mono font-bold">${sicKey}</span>
+                        </p>
+                        <p class="mt-4 text-[8px] text-slate-600 italic">MobbyOS is now processing your business node.</p>
+                    </div>`;
+            }, 1000);
         }
     </script>
 </body>
