@@ -3,129 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIC Corp | SMail Gateway</title>
+    <title>SIC Corp | SMail Gateway v2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
-        body { font-family: 'Fira Code', monospace; scroll-behavior: smooth; }
-        .glow:hover { box-shadow: 0 0 20px rgba(34, 211, 238, 0.3); }
-        .terminal-scroll::-webkit-scrollbar { width: 4px; }
-        .terminal-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        body { font-family: 'Fira Code', monospace; background-color: #020617; }
+        .terminal-glow { box-shadow: 0 0 30px rgba(6, 182, 212, 0.1); }
+        .log-entry { animation: slideIn 0.3s ease-out; border-left: 2px solid #1e293b; padding-left: 10px; margin-bottom: 6px; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        
+        /* Custom scrollbar for the log */
+        #systemLog::-webkit-scrollbar { width: 4px; }
+        #systemLog::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col">
+<body class="text-slate-200 min-h-screen flex flex-col p-4 md:p-8">
 
-    <nav class="p-6 border-b border-slate-800 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="text-2xl font-bold tracking-tighter text-cyan-400">
-                SIC<span class="text-white">.CORP</span>
-            </div>
-            <div class="text-xs font-mono text-slate-500 hidden sm:block">
-                STATUS: <span class="text-emerald-500 animate-pulse">ENCRYPTED_ONLINE</span>
+    <div class="max-w-2xl mx-auto w-full">
+        <div class="flex justify-between items-center mb-12">
+            <div class="text-2xl font-black text-cyan-400 tracking-tighter underline decoration-cyan-900">SIC<span class="text-white">.CORP</span></div>
+            <div class="text-[10px] text-slate-500 font-mono bg-slate-900/50 px-3 py-1 rounded-full border border-slate-800">
+                ENCRYPTION: <span class="text-emerald-500">ACTIVE</span>
             </div>
         </div>
-    </nav>
 
-    <header class="pt-20 pb-10 px-6 text-center">
-        <h1 class="text-5xl md:text-6xl font-black mb-4 tracking-tight">
-            SMail <span class="text-cyan-500">Center</span>
-        </h1>
-        <p class="text-slate-500 max-w-xl mx-auto mb-8">
-            The private communication layer for Roy's SIC Corp. No NexaFlow tracking. No noise. Just data.
-        </p>
-    </header>
-
-    <main class="flex-grow px-6 pb-20">
-        <div class="max-w-xl mx-auto">
+        <div class="bg-slate-900 border border-slate-800 p-6 md:p-10 rounded-3xl terminal-glow mb-8 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="100" height="100" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            </div>
             
-            <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-2xl relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
-                
-                <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
-                    <span class="h-2 w-2 bg-cyan-500 rounded-full"></span>
-                    Identity Verification
-                </h2>
+            <h1 class="text-4xl font-bold mb-2 tracking-tighter">SMAIL <span class="text-cyan-500">CENTER</span></h1>
+            <p class="text-slate-500 text-xs mb-8 uppercase tracking-[0.2em]">Identity Provisioning Protocol</p>
 
-                <div class="space-y-6">
-                    <div>
-                        <label class="text-[10px] uppercase tracking-widest text-slate-500 mb-2 block">Request Internal Alias</label>
-                        <div class="flex">
-                            <input type="text" id="requestedName" placeholder="e.g. bob" 
-                                   class="w-full bg-slate-950 border border-slate-800 p-4 rounded-l-xl focus:outline-none focus:border-cyan-500 transition font-mono">
-                            <span class="bg-slate-800 p-4 rounded-r-xl text-cyan-500 border border-l-0 border-slate-800 font-bold flex items-center">
-                                .smail
-                            </span>
-                        </div>
-                    </div>
-
-                    <button onclick="evaluateUser()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-slate-900 font-black py-4 rounded-xl transition transform active:scale-95 shadow-lg uppercase tracking-tighter">
-                        Request Pulse Match
-                    </button>
-
-                    <div id="statusBox" class="mt-4 p-4 bg-black rounded-lg hidden border border-slate-800">
-                        <p id="bouncerMessage" class="text-xs font-mono"></p>
+            <div class="space-y-6">
+                <div>
+                    <label class="text-[10px] text-slate-600 uppercase mb-2 block ml-1 font-bold">Request Alias</label>
+                    <div class="flex shadow-inner">
+                        <input type="text" id="requestedName" placeholder="user_id" 
+                               class="w-full bg-slate-950 border border-slate-800 p-4 rounded-l-2xl focus:outline-none focus:border-cyan-500 transition text-cyan-400 font-bold placeholder:text-slate-800">
+                        <span class="bg-slate-800 p-4 rounded-r-2xl text-slate-400 border border-l-0 border-slate-800 font-bold flex items-center">
+                            .smail
+                        </span>
                     </div>
                 </div>
-            </div>
 
-            <div class="mt-12">
-                <h3 class="text-center text-[10px] uppercase tracking-[0.3em] text-slate-600 mb-6">Active Network Nodes</h3>
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-slate-900/50 border border-slate-800 p-3 rounded-lg flex items-center gap-3">
-                        <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                        <span class="text-sm font-mono text-slate-400">roy.smail</span>
-                    </div>
-                    <div class="bg-slate-900/50 border border-slate-800 p-3 rounded-lg flex items-center gap-3">
-                        <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                        <span class="text-sm font-mono text-slate-400">bob.smail</span>
-                    </div>
-                    <div class="bg-slate-900/50 border border-slate-800 p-3 rounded-lg flex items-center gap-3">
-                        <div class="w-2 h-2 bg-cyan-500/20 rounded-full"></div>
-                        <span class="text-sm font-mono text-slate-600">mobby.os</span>
-                    </div>
-                    <div class="bg-slate-900/50 border border-slate-800 p-3 rounded-lg flex items-center gap-3">
-                        <div class="w-2 h-2 bg-slate-700 rounded-full"></div>
-                        <span class="text-sm font-mono text-slate-700">awaiting_node...</span>
-                    </div>
+                <button onclick="runScan()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black py-4 rounded-2xl transition transform active:scale-95 shadow-lg uppercase tracking-wider">
+                    Analyze Pulse
+                </button>
+
+                <div id="statusBox" class="mt-4 p-5 bg-black/50 rounded-2xl hidden border border-slate-800 border-l-4 border-l-cyan-500">
+                    <p id="bouncerMessage" class="text-xs leading-relaxed font-mono italic"></p>
                 </div>
             </div>
-
         </div>
-    </main>
 
-    <footer class="p-8 border-t border-slate-900 text-center">
-        <div class="text-xs text-slate-600 font-mono">
-            SECURE_LINK: <a href="mailto:sicmailcenter1@gmail.com" class="text-slate-400 hover:text-cyan-400">sicmailcenter1@gmail.com</a>
+        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
+            <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span> Internal Security Log
+            </h3>
+            <div id="systemLog" class="space-y-1 font-mono text-[10px] h-32 overflow-y-auto pr-2 scroll-smooth">
+                <div class="text-slate-600">[SYS_READY] Waiting for user input...</div>
+            </div>
         </div>
-        <div class="mt-2 text-[10px] text-slate-800 uppercase">SIC Corp Intranet // 2026</div>
+    </div>
+
+    <footer class="mt-auto pt-12 text-center">
+        <div class="mb-4">
+            <a href="mailto:cone-swarm-junior@duck.com" class="inline-block bg-slate-900 border border-slate-800 hover:border-cyan-500 px-6 py-2 rounded-full text-[10px] text-slate-400 uppercase tracking-widest transition-all">
+                SECURE_RELAY: <span class="text-cyan-500">cone-swarm-junior@duck.com</span>
+            </a>
+        </div>
+        <p class="text-[9px] text-slate-800 uppercase tracking-widest font-bold">
+            SIC Corp &copy; 2026 // Distributed via MobbyOS
+        </p>
     </footer>
 
     <script>
-        function evaluateUser() {
-            const username = document.getElementById('requestedName').value.trim().toLowerCase();
-            const statusBox = document.getElementById('statusBox');
-            const bouncerMessage = document.getElementById('bouncerMessage');
+        function addLog(msg, type) {
+            const log = document.getElementById('systemLog');
+            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+            const colors = {
+                info: 'text-slate-500',
+                success: 'text-emerald-500',
+                error: 'text-red-500 font-bold'
+            };
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${colors[type]}`;
+            entry.innerText = `[${time}] ${msg}`;
+            log.prepend(entry);
+        }
 
-            if (!username) return;
+        function runScan() {
+            const name = document.getElementById('requestedName').value.trim().toLowerCase();
+            const statusBox = document.getElementById('statusBox');
+            const bouncer = document.getElementById('bouncerMessage');
+
+            if (!name) {
+                addLog("NULL_INPUT_DETECTED", "error");
+                return;
+            }
 
             statusBox.classList.remove('hidden');
-            bouncerMessage.innerText = "> Running SIC-Scan on '" + username + "'...";
-            bouncerMessage.className = "text-xs font-mono text-cyan-500";
+            statusBox.style.borderLeftColor = "#06b6d4";
+            bouncer.innerText = "> INITIALIZING SIC-SCAN FOR '" + name.toUpperCase() + "'...";
+            bouncer.className = "text-cyan-400 font-mono italic";
+            addLog(`SCANNING_NODE: ${name}`, 'info');
 
             setTimeout(() => {
-                const forbidden = ['admin', 'test', 'nexaflow', 'google', 'root'];
+                const blocked = ['admin', 'root', 'nexaflow', 'test', 'google', 'owner'];
                 
-                if (username.length < 3) {
-                    bouncerMessage.innerText = "> REJECTED: Alias string insufficient length.";
-                    bouncerMessage.className = "text-xs font-mono text-red-500";
-                } else if (forbidden.includes(username)) {
-                    bouncerMessage.innerText = "> REJECTED: Security Risk. Alias restricted.";
-                    bouncerMessage.className = "text-xs font-mono text-red-500";
+                if (name.length < 3) {
+                    bouncer.innerText = "> ERROR: ID_LENGTH_INSUFFICIENT. SIC REQUIREMENT NOT MET.";
+                    statusBox.style.borderLeftColor = "#ef4444";
+                    bouncer.className = "text-red-500 font-mono";
+                    addLog(`REJECTED_SHORT_ID: ${name}`, 'error');
+                } else if (blocked.includes(name)) {
+                    bouncer.innerText = "> WARNING: RESTRICTED_USER_DETECTED. ACCESS DENIED.";
+                    statusBox.style.borderLeftColor = "#ef4444";
+                    bouncer.className = "text-red-500 font-mono font-black";
+                    addLog(`SECURITY_ALERT: RESTRICTED_NAME: ${name}`, 'error');
                 } else {
-                    bouncerMessage.innerText = "> SUCCESS: '" + username + ".smail' is available. Contact sicmailcenter1@gmail.com to claim.";
-                    bouncerMessage.className = "text-xs font-mono text-emerald-400";
+                    bouncer.innerHTML = `> PULSE_MATCH_CONFIRMED: '${name}.smail' is verified. <a href="mailto:cone-swarm-junior@duck.com?subject=Claiming ${name}.smail" class="underline text-emerald-400 hover:text-white uppercase font-black">Claim via Relay</a>`;
+                    statusBox.style.borderLeftColor = "#10b981";
+                    bouncer.className = "text-emerald-400 font-mono";
+                    addLog(`SUCCESS: NODE_AVAILABLE: ${name}`, 'success');
                 }
-            }, 1500);
+            }, 1200);
         }
     </script>
 </body>
