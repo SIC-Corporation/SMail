@@ -3,132 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIC Corp | SMail Gateway v2</title>
+    <title>SMail | Remastered by SIC Corp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
-        body { font-family: 'Fira Code', monospace; background-color: #020617; }
-        .terminal-glow { box-shadow: 0 0 30px rgba(6, 182, 212, 0.1); }
-        .log-entry { animation: slideIn 0.3s ease-out; border-left: 2px solid #1e293b; padding-left: 10px; margin-bottom: 6px; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Fira+Code:wght@400&display=swap');
         
-        /* Custom scrollbar for the log */
-        #systemLog::-webkit-scrollbar { width: 4px; }
-        #systemLog::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        :root { --bg: #0b0b0c; --card: #161617; --accent: #4285f4; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #fff; overflow: hidden; }
+        
+        /* Smooth Transitions */
+        .page { transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); position: absolute; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .hidden-page { opacity: 0; transform: translateY(20px); pointer-events: none; }
+        
+        /* FPS Boost Logic */
+        .fps-boost-active { --bg: #000; }
+        .fps-boost-active * { border-radius: 4px !important; box-shadow: none !important; backdrop-filter: none !important; transition: none !important; }
+
+        .gemini-glow { background: linear-gradient(135deg, #4285f4 0%, #9b72f3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        
+        .loading-bar { width: 0%; height: 2px; background: linear-gradient(90deg, #4285f4, #9b72f3); transition: width 0.5s ease; }
     </style>
 </head>
-<body class="text-slate-200 min-h-screen flex flex-col p-4 md:p-8">
+<body>
 
-    <div class="max-w-2xl mx-auto w-full">
-        <div class="flex justify-between items-center mb-12">
-            <div class="text-2xl font-black text-cyan-400 tracking-tighter underline decoration-cyan-900">SIC<span class="text-white">.CORP</span></div>
-            <div class="text-[10px] text-slate-500 font-mono bg-slate-900/50 px-3 py-1 rounded-full border border-slate-800">
-                ENCRYPTION: <span class="text-emerald-500">ACTIVE</span>
-            </div>
+    <div class="fixed top-6 right-6 z-[100]">
+        <button onclick="toggleFPS()" id="fpsBtn" class="glass px-4 py-2 rounded-full text-[10px] font-black tracking-tighter hover:bg-white hover:text-black transition">
+            FPS BOOST: OFF
+        </button>
+    </div>
+
+    <section id="welcomeScreen" class="page">
+        <div class="text-center">
+            <h1 class="text-6xl font-extrabold tracking-tighter mb-4 opacity-0 transition-all duration-1000 translate-y-4" id="welcomeTitle">
+                SMail <span class="gemini-glow">Remastered</span>
+            </h1>
+            <p class="text-slate-500 font-light tracking-[0.3em] uppercase text-xs mb-8" id="welcomeSub">Architecture by SIC Corp</p>
+            <button onclick="startSetup()" class="glass px-10 py-4 rounded-full font-bold hover:scale-105 transition active:scale-95">
+                Initialize System
+            </button>
         </div>
+    </section>
 
-        <div class="bg-slate-900 border border-slate-800 p-6 md:p-10 rounded-3xl terminal-glow mb-8 relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-4 opacity-10">
-                <svg width="100" height="100" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+    <section id="setupScreen" class="page hidden-page">
+        <div class="max-w-md w-full glass p-10 rounded-[40px] shadow-2xl">
+            <div class="mb-10">
+                <h2 class="text-2xl font-bold mb-2">Welcome, Founder.</h2>
+                <p class="text-slate-400 text-sm">Let's set up your business identity.</p>
             </div>
-            
-            <h1 class="text-4xl font-bold mb-2 tracking-tighter">SMAIL <span class="text-cyan-500">CENTER</span></h1>
-            <p class="text-slate-500 text-xs mb-8 uppercase tracking-[0.2em]">Identity Provisioning Protocol</p>
 
             <div class="space-y-6">
                 <div>
-                    <label class="text-[10px] text-slate-600 uppercase mb-2 block ml-1 font-bold">Request Alias</label>
-                    <div class="flex shadow-inner">
-                        <input type="text" id="requestedName" placeholder="user_id" 
-                               class="w-full bg-slate-950 border border-slate-800 p-4 rounded-l-2xl focus:outline-none focus:border-cyan-500 transition text-cyan-400 font-bold placeholder:text-slate-800">
-                        <span class="bg-slate-800 p-4 rounded-r-2xl text-slate-400 border border-l-0 border-slate-800 font-bold flex items-center">
-                            .smail
-                        </span>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 block">Choose your business handle</label>
+                    <div class="relative">
+                        <input type="text" id="aliasInput" placeholder="company_name" 
+                               class="w-full bg-black/40 border border-white/10 p-5 rounded-2xl focus:outline-none focus:border-blue-500 transition-all text-white">
+                        <span class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 text-xs">@duck.com</span>
                     </div>
                 </div>
 
-                <button onclick="runScan()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black py-4 rounded-2xl transition transform active:scale-95 shadow-lg uppercase tracking-wider">
-                    Analyze Pulse
+                <button onclick="runSecurityStack()" class="w-full bg-white text-black font-extrabold py-5 rounded-2xl hover:bg-slate-200 transition">
+                    Finalize Identity
                 </button>
+            </div>
 
-                <div id="statusBox" class="mt-4 p-5 bg-black/50 rounded-2xl hidden border border-slate-800 border-l-4 border-l-cyan-500">
-                    <p id="bouncerMessage" class="text-xs leading-relaxed font-mono italic"></p>
+            <div id="auditBox" class="mt-8 pt-8 border-t border-white/5 hidden">
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center text-[10px]">
+                        <span class="text-slate-500 uppercase font-bold">WatcherDog Privacy Scan</span>
+                        <span id="status1" class="text-blue-500 italic font-mono">WAITING...</span>
+                    </div>
+                    <div class="flex justify-between items-center text-[10px]">
+                        <span class="text-slate-500 uppercase font-bold">SICryption Hash Link</span>
+                        <span id="status2" class="text-blue-500 italic font-mono">WAITING...</span>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl hidden" id="finalResult">
+                    <p class="text-emerald-400 text-xs font-bold mb-2 uppercase tracking-tighter italic">Identity Provisioned</p>
+                    <a id="claimLink" href="#" class="text-white underline text-[10px] font-mono">CLICK TO CLAIM UPLINK</a>
                 </div>
             </div>
         </div>
-
-        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
-            <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span> Internal Security Log
-            </h3>
-            <div id="systemLog" class="space-y-1 font-mono text-[10px] h-32 overflow-y-auto pr-2 scroll-smooth">
-                <div class="text-slate-600">[SYS_READY] Waiting for user input...</div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="mt-auto pt-12 text-center">
-        <div class="mb-4">
-            <a href="mailto:cone-swarm-junior@duck.com" class="inline-block bg-slate-900 border border-slate-800 hover:border-cyan-500 px-6 py-2 rounded-full text-[10px] text-slate-400 uppercase tracking-widest transition-all">
-                SECURE_RELAY: <span class="text-cyan-500">cone-swarm-junior@duck.com</span>
-            </a>
-        </div>
-        <p class="text-[9px] text-slate-800 uppercase tracking-widest font-bold">
-            SIC Corp &copy; 2026 // Distributed via MobbyOS
-        </p>
-    </footer>
+    </main>
 
     <script>
-        function addLog(msg, type) {
-            const log = document.getElementById('systemLog');
-            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
-            const colors = {
-                info: 'text-slate-500',
-                success: 'text-emerald-500',
-                error: 'text-red-500 font-bold'
-            };
-            const entry = document.createElement('div');
-            entry.className = `log-entry ${colors[type]}`;
-            entry.innerText = `[${time}] ${msg}`;
-            log.prepend(entry);
+        // Animate Welcome Screen on Load
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('welcomeTitle').style.opacity = '1';
+                document.getElementById('welcomeTitle').style.transform = 'translateY(0)';
+            }, 300);
         }
 
-        function runScan() {
-            const name = document.getElementById('requestedName').value.trim().toLowerCase();
-            const statusBox = document.getElementById('statusBox');
-            const bouncer = document.getElementById('bouncerMessage');
+        function toggleFPS() {
+            document.body.classList.toggle('fps-boost-active');
+            const btn = document.getElementById('fpsBtn');
+            btn.innerText = document.body.classList.contains('fps-boost-active') ? "FPS BOOST: ON" : "FPS BOOST: OFF";
+        }
 
-            if (!name) {
-                addLog("NULL_INPUT_DETECTED", "error");
-                return;
-            }
+        function startSetup() {
+            document.getElementById('welcomeScreen').classList.add('hidden-page');
+            document.getElementById('setupScreen').classList.remove('hidden-page');
+        }
 
-            statusBox.classList.remove('hidden');
-            statusBox.style.borderLeftColor = "#06b6d4";
-            bouncer.innerText = "> INITIALIZING SIC-SCAN FOR '" + name.toUpperCase() + "'...";
-            bouncer.className = "text-cyan-400 font-mono italic";
-            addLog(`SCANNING_NODE: ${name}`, 'info');
+        async function runSecurityStack() {
+            const name = document.getElementById('aliasInput').value.trim();
+            if(!name) return;
 
-            setTimeout(() => {
-                const blocked = ['admin', 'root', 'nexaflow', 'test', 'google', 'owner'];
-                
-                if (name.length < 3) {
-                    bouncer.innerText = "> ERROR: ID_LENGTH_INSUFFICIENT. SIC REQUIREMENT NOT MET.";
-                    statusBox.style.borderLeftColor = "#ef4444";
-                    bouncer.className = "text-red-500 font-mono";
-                    addLog(`REJECTED_SHORT_ID: ${name}`, 'error');
-                } else if (blocked.includes(name)) {
-                    bouncer.innerText = "> WARNING: RESTRICTED_USER_DETECTED. ACCESS DENIED.";
-                    statusBox.style.borderLeftColor = "#ef4444";
-                    bouncer.className = "text-red-500 font-mono font-black";
-                    addLog(`SECURITY_ALERT: RESTRICTED_NAME: ${name}`, 'error');
-                } else {
-                    bouncer.innerHTML = `> PULSE_MATCH_CONFIRMED: '${name}.smail' is verified. <a href="mailto:cone-swarm-junior@duck.com?subject=Claiming ${name}.smail" class="underline text-emerald-400 hover:text-white uppercase font-black">Claim via Relay</a>`;
-                    statusBox.style.borderLeftColor = "#10b981";
-                    bouncer.className = "text-emerald-400 font-mono";
-                    addLog(`SUCCESS: NODE_AVAILABLE: ${name}`, 'success');
-                }
-            }, 1200);
+            document.getElementById('auditBox').classList.remove('hidden');
+            
+            // WatcherDog Scan
+            document.getElementById('status1').innerText = "SCANNING...";
+            await new Promise(r => setTimeout(r, 1200));
+            document.getElementById('status1').innerText = "PROTECTED";
+            document.getElementById('status1').classList.replace('text-blue-500', 'text-emerald-500');
+
+            // SICryption Gen
+            document.getElementById('status2').innerText = "ENCRYPTING...";
+            await new Promise(r => setTimeout(r, 1200));
+            document.getElementById('status2').innerText = "SIC-VERIFIED";
+            document.getElementById('status2').classList.replace('text-blue-500', 'text-emerald-500');
+
+            // Final Result
+            document.getElementById('finalResult').classList.remove('hidden');
+            document.getElementById('claimLink').href = `mailto:cone-swarm-junior@duck.com?subject=SIC_REMASTERED_CLAIM: ${name}`;
         }
     </script>
 </body>
